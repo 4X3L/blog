@@ -1,5 +1,6 @@
 ---
 title: Valgrind
+description: Short post on a very useful tool to debug memory problems. 
 ---
 [Valgrind](http://valgrind.org/) is a great tool and makes programming in C so much easier.
 

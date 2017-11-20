@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Alex Benishek's Programmin Blog</title>
+    <link href="https://alexbenishek.com/atom.xml" rel="self" />
+    <link href="https://alexbenishek.com" />
+    <id>https://alexbenishek.com/atom.xml</id>
+    <author>
+        <name>Alex Benishek</name>
+        <email>alex@alexbenishek.com</email>
+    </author>
+    <updated>2017-11-19T00:00:00Z</updated>
+    <entry>
+    <title>Getting Started with Wayland</title>
+    <link href="https://alexbenishek.com/posts/2017-11-19-wayland.html" />
+    <id>https://alexbenishek.com/posts/2017-11-19-wayland.html</id>
+    <published>2017-11-19T00:00:00Z</published>
+    <updated>2017-11-19T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Example code for how code a client for Wayland, the replacement for X11.]]></summary>
+</entry>
+<entry>
+    <title>Valgrind</title>
+    <link href="https://alexbenishek.com/posts/2017-10-14-valgrind.html" />
+    <id>https://alexbenishek.com/posts/2017-10-14-valgrind.html</id>
+    <published>2017-10-14T00:00:00Z</published>
+    <updated>2017-10-14T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Short post on a very useful tool to debug memory problems.]]></summary>
+</entry>
+<entry>
+    <title>Makfiles</title>
+    <link href="https://alexbenishek.com/posts/2017-08-13-make.html" />
+    <id>https://alexbenishek.com/posts/2017-08-13-make.html</id>
+    <published>2017-08-13T00:00:00Z</published>
+    <updated>2017-08-13T00:00:00Z</updated>
+    <summary type="html"><![CDATA[How to write a makefile, starting from the basics to a fully featured file.]]></summary>
+</entry>
+<entry>
+    <title>Getting Started with Autotools</title>
+    <link href="https://alexbenishek.com/posts/2017-05-19-autotools.html" />
+    <id>https://alexbenishek.com/posts/2017-05-19-autotools.html</id>
+    <published>2017-05-19T00:00:00Z</published>
+    <updated>2017-05-19T00:00:00Z</updated>
+    <summary type="html"><![CDATA[A short tutorial on a simple GNU Autotools project]]></summary>
+</entry>
+
+</feed>

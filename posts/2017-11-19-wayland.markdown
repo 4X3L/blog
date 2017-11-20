@@ -1,5 +1,6 @@
 ---
 title: Getting Started with Wayland
+description: Example code for how code a client for Wayland, the replacement for X11.
 ---
 
 In this post I will give an overview of how Wayland on Linux works and then provide source code in a "literate" style where a large block of text preceds a small code segment. This post will only provide a summary of the full code that is on my [github](https://github.com/4X3L/example-wayland). Mainly I will be omitting repetitive code and error checking.

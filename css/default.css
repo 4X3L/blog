@@ -38,6 +38,11 @@ div#header ul#header-list li {
     display: inline-block;
 }
 
+div.post-description {
+    margin: 0;
+    padding: 0 0 0 4em;
+}
+
 div#container {
     width: 35em;
     margin: 2em auto;
@@ -140,6 +145,18 @@ pre {
 code {
     font-size: 75%;
     margin: 2em 0;
+}
+
+div#feed-list {
+    margin: 1em auto;
+    padding: 0;
+    font-size: 60%;
+    color: #151125;
+    text-align: center;
+}
+
+div.feed-item {
+    display: inline-block;
 }
 
 @media only screen and (max-width: 780px) {

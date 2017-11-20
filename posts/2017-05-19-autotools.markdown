@@ -1,5 +1,6 @@
 ---
 title: Getting Started with Autotools
+description: A short tutorial on a simple GNU Autotools project
 ---
 ## Installation
 ### Linux

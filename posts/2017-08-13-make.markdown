@@ -1,5 +1,6 @@
 ---
 title: Makfiles
+description: How to write a makefile, starting from the basics to a fully featured file.
 ---
 My [previous post](/post/autotools) was on GNU Autotools which is mainly used for medium and large projects. However, for many small projects you may only need a hand written makefile. Especially if you are student at a University who is making lots of small projects often. For example, at my home institution, the University of Rochester, it is expect that all projects written in C come with a makefile.
 
