@@ -2,5 +2,6 @@
 title: Contact
 ---
 
-email: alex@alexbenishek.com
-github: [4X3L](https://github.com/4X3L)
+[email](mailto:alex@alexbenishek.com)
+
+[github](https://github.com/4X3L)
