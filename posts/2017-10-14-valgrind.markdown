@@ -1,0 +1,41 @@
+---
+title: Valgrind
+---
+[Valgrind](http://valgrind.org/) is a great tool and makes programming in C so much easier.
+
+The first roadblock would-be C programmers face is the dreaded "Segmentation fault (core dumped)". This is about as helpful as a message saying, "Screw you, programmer!". However, valgrind will tell you where what went wrong when in your code. Allowing you as the programmer to start debugging.
+
+Consider the following obviously broken code.
+
+    #include <stdio.h>
+    
+    int main() {
+      int *x = NULL;
+      printf("%d\n", *x);
+    }
+
+Compiling with the command
+
+    gcc main.c -o main
+
+Then running the program will producing a segmentation fault. Lets now try running it with valgrind.
+
+    valgrind ./main
+
+There will be a lot of output but look for this section
+
+    ==22201== Invalid read of size 4
+    ==22201==    at 0x4004EB: main (in /.../main)
+    ==22201==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+
+The specifics on your computer might be different but if will look similar. The first line tells us we tried to read four bytes from memory when we shouldn't have. That makes sense because on my machine an `int` is four bytes. The final line gives us the address of the read. Again, this is what we would expect since we tried to dereference a null pointer and on most architectures a null pointer will be a pointer to the memory address zero. The third line is trying to tell us where in the original source code the invalid read occurred but it does not know since we did not compile with debug symbols. Lets change that.
+
+    gcc main.c -g -o main
+
+After running valgrind for a second time we will see the line now tells use where in the code the error occurred.
+
+    ==22291==    at 0x4004EB: main (main.c:5)
+
+Now it is saying that the error occurred on line five in `main.c`. Now that we know where the error is occurring we can fire up `gdb` and take a closer look at whats happening.
+
+This post is incredibly basic and there is so much more to valgrind but for a beginner programmer this will be the most useful part. In a later post on memory management I will also use it to detect when memory is not freed but also not being used.

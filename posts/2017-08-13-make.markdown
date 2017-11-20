@@ -1,0 +1,170 @@
+---
+title: Makfiles
+---
+My [previous post](/post/autotools) was on GNU Autotools which is mainly used for medium and large projects. However, for many small projects you may only need a hand written makefile. Especially if you are student at a University who is making lots of small projects often. For example, at my home institution, the University of Rochester, it is expect that all projects written in C come with a makefile.
+
+Due to the importance and ubiquity of makefile, and the fact that as a TA I received many questions about them I decided to write this small tutorial on how to write them. This tutorial assumes you are familiar with the command line and gcc. If not, you can either type `man gcc` into the command line if you are on linux, or look at the [gcc manual](https://www.gnu.org/software/make/manual/make.html). Or, if you are on windows you can either setup the [Cygwin](https://www.cygwin.com/) environment or ssh into a linux server if you have access to one.
+
+In this post I will start out with a simple makefile and incrementally add more and more to it. I divided this post into four parts. Note that the initial makefile should work for your project, but the later ones will be more flexible and closer to a "real world" makefile.
+
+### Makfiles as ways of executing commands
+
+A makefile is a file that tells the program make how to compile your project. It also keeps track of changes in your project so that if you have previously compiled your project and make a change in a single file then make will only recompile the single file. The first thing you need to know is the syntax of makefiles.
+
+Each makefile is a text file named, “makefile”, “Makefile” or “GNUmakefile”. Observe that there is no extension on a makefile. If you try creating a makefile with the name “makefile.txt” as I have seen some people do, it will not work.
+
+In this tutorial we will not compile any code at first. In a directory which does not already contain a makefile create a makefile, naming it as described above, and in the contents of the file put:
+
+    hello:
+    	echo "Hello, world!"
+
+The command under `hello:` must be must be indented with a single tab. If you use spaces it will not work. (It’s annoying, I know.) Now run the command `make` in the same directory as the makefile. It should print out the greeting. This example shows how makefiles are just ways of executing commands.
+
+### A simple makefile
+If, after the above example you are thinking ahead you may be wondering two things, firstly, "Can I just replace echo with the command to compile my project?" The answer is yes and it is probably the simplest makefile you can have. For example:
+
+    build:
+    	gcc main.c foo.c bar.c baz.c -o bop
+
+You should of course, replace `main.c` `foo.c` `bar.c` and `baz.c` with the names of your actual `.c` files and replace `bop` with the name of the executable. If all you want is to get your code to compile you can stop reading the tutorial here. If you are interested in learning more about makefiles, continue with Part III below.
+
+### Understanding and Tracking dependencies
+The second thing you may have been wondering is, "If all a makefile does is run commands what is the point of having one?". The point is that makefiles will keep track of dependencies for you and make sure you do not do extra work. Lets return to our first example and add a goodbye message.
+
+    hello:
+    	echo "Hello, world!"
+    
+    bye: 
+    	echo "Goodbye, cruel world!"
+
+Try running `make`,  `make hello`,  and  `make bye`  and see what happens each time. Can you guess what happens if you swap the first and second sections and run make? Try if for yourself and see if your guess was correct. If our makefile is
+
+    bye: 
+    	echo "Goodbye, cruel world!"
+    
+    hello:
+    	echo "Hello, world!"
+
+and we run make then make will print the goodbye message because by default make will run the first section in the file. What I referred to as "sections" before are actually called "targets". Both "bye" and "hello" are targets and make will execute the first target it sees if you do not tell it which target to execute. What is special about `make` is that targets can depend on other targets. If we decide that we always need to say hello before we say goodbye we can simply do this,
+
+    bye: hello
+    	echo "Goodbye, cruel world!"
+    
+    hello:
+    	echo "Hello, world!"
+
+We now say that `bye` depends on `hello`, or that `hello` is a dependency of `bye`. This means that before running the target `bye` `make` will run the target `hello`.
+
+If we want to run multiple commands in a single target we would add each command under the target it belongs to and at the same level of indentation. This can be seen in the following example:
+
+
+    bye: hello
+    	echo "Goodbye, cruel world!"
+    
+    hello:
+    	echo "Hello, world!"
+    	echo "Is anyone there?"
+
+Not only can we make targets depend on other targets, we can make targets depend on the existence of files. Let us say hello, display a message contained in a file, and then say goodbye as follows:
+
+
+    conversation: hello message bye
+    
+    bye:
+    	echo "Goodbye, cruel world!"
+    
+    message: msg.txt
+    	cat msg.txt
+    
+    hello:
+    	echo "Hello, world!"
+
+First try running make without creating a file named `msg.txt` then, create a file `msg.txt` with whatever message you want, and run `make` again.
+
+Notice how conversation does not have any commands associated with it and only exists to state dependencies. This is not only possible, but also quite common. In this case, by default, `make` will run targets hello, message, and bye.
+
+### Makefile for Compiling Code in C
+
+Let us finally get back to compiling code. In C, each `.c` file is compiled into a `.o` file, and then all of the `.o` files are combined to create the executable. These steps are called compilation and linking. By default, gcc will do both steps for you. However, if you are using a makefile to compile your program then make can break the steps up so that if you only change one `.c` file, `make` will only compile the one `.c` file to a new `.o` file and will link everything for you. This helps with compile time so that you do not have to recompile each `.c` file every time.
+
+Here is an example on how one would do that. Lets assume our project consists of the files, `main.c`, `foo.c`, `foo.h`, `bar.c`, `bar.h`, `baz.c`, and `baz.h`. I arbitrarily chose "redrum" to be the name of the executable. Here is an example:
+
+
+    all: main.o foo.o bar.o baz.o
+    	gcc main.o foo.o bar.o baz.o -o redrum
+    
+    main.o: main.c
+    	gcc -c main.c
+    
+    foo.o: foo.c
+    	gcc -c foo.c
+    
+    bar.o: bar.c
+    	gcc -c bar.c
+    
+    baz.o: baz.c
+    	gcc -c baz.c
+
+If we run `make` it compiles fine. If you are thinking that there must be a better way to do this then you’d be right. We repeated ourselves a lot when we wrote the makefile. We can fix that in the following way:
+
+
+    SRC = main.c foo.c bar.c baz.c
+    OBJ = $(SRC:.c=.o)
+    
+    redrum: $(OBJ)
+    	gcc $(OBJ) -o $(@F)
+    
+    %.o: %.c
+    	gcc -c $(<)
+
+There is a lot of new syntax presented above so I’ll go through the lines one by one. In make files we can also have variables and lists. Variables are defined in the way would would expect. Lists are just words separated by white space. In the first line we are assigning the list of `.c` files we want to compile to the variable source. The next line just says that the `OBJ` variable is the same as the `SRC` one but all of the `.c` extensions are replaced with `.o`. (`.o` files are called object files and `OBJ` is just short for object.) When we use a variable in a makefile we surround the variable name with parentheses and put a dollar sign in front. The redrum target on the fourth line is the target that links the object files together in order to create the executable. It depends on all of the `.c` files having been compiled to `.o` files. Some variables are automatically defined. On the fifth line we find `@F`, which is one such variable. It’s value is whatever the name of the target that it is used in is. The percent symbol just acts as a wild card so, on the seventh line `%.o: %.c` says that every object file depends on the `.c` file with the same name. The `<` variable is another variable with a value that is automatically assigned. Its value is the first dependency of the target.
+
+Putting it all together, we have a list of `.c` and `.o` files. The `.o` file names are the same as the `.c` file names, only the extensions are changed. To create the executable we first create each object file, and every object file depends on the existence of its `.c` file. Once all `.c` files are compiled we then link the `.o` files and give the name of the target to the executable.
+
+Additionally, you may wish to set different compiler flags depending on if you are debugging the executable or not. (To read more about compiler flags run `man gcc` or see the [gcc manual](https://gcc.gnu.org/onlinedocs/gcc-7.2.0/gcc/Invoking-GCC.html#Invoking-GCC).) If you are not debugging then you want to turn on aggressive optimizations and remove debugging metadata so the resulting executable is smaller and faster.
+
+    SRC = main.c
+    OBJ = $(SRC:.c=.o)
+    CFLAGS = --std=c11
+    
+    debug: CFLAGS += -O0 -Werror -Wall -Wextra -Wpedantic -g
+    debug: main
+    
+    release: CFLAGS += -O3
+    release: main
+    
+    main: $(OBJ)
+    	gcc $(OBJ) -o $(@F)
+    
+    %.o: %.c
+    	gcc -c $(<) $(CFLAGS)
+
+If the the name of the target appears as a command line argument to the `make` command then that tells make to run that target. Depending on if we want to compile the program for debugging or for final release we will first set different flags in the different targets then we will call gcc. Now, we if we run `make` debug then `make` release you may notice something odd; It doesn’t compile the second time we run `make`! This is because `make` realizes that we already compiled the program once and is trying to save effort by not compiling it a second time. A simple way to get around this is to remove all of the files once we want to change from release to debug or vice versa. This is done by adding a clean target to the bottom.
+
+    SRC = main.c
+    OBJ = $(SRC:.c=.o)
+    CFLAGS = --std=c11
+    
+    debug: CFLAGS += -O0 -Werror -Wall -Wextra -Wpedantic -g
+    debug: main
+    
+    release: CFLAGS += -O3
+    release: main
+    
+    main: $(OBJ)
+    	gcc $(OBJ) -o $(@F)
+    
+    %.o: %.c
+    	gcc -c $(<) $(CFLAGS)
+    
+    .PHONY: clean
+    
+    clean:
+    	rm $(OBJ)
+    	rm main
+
+You may also notice the .PHONY target. That is just a way to make sure clean is run every time you call it.
+
+You have just created a solid makefile that will work for most small projects. I hope this tutorial was helpful. If you have any questions or suggestions on how to improve this tutorial feel free to contact me through my email. If you are unfamiliar with the command line or the `gcc` flags, I will release a separate tutorials on those topics or visit the link I put previously in the tutorial.
+
+For more information about make see the [GNU Make manual](https://www.gnu.org/software/make/manual/make.html).
