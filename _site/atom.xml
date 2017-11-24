@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <title>Alex Benishek's Programmin Blog</title>
+    <title>Alex Benishek's Programming Blog</title>
     <link href="https://alexbenishek.com/atom.xml" rel="self" />
     <link href="https://alexbenishek.com" />
     <id>https://alexbenishek.com/atom.xml</id>

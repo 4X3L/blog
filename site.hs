@@ -8,7 +8,7 @@ import           Hakyll
 
 myFeedConfiguration :: FeedConfiguration
 myFeedConfiguration = FeedConfiguration
-    { feedTitle       = "Alex Benishek's Programmin Blog"
+    { feedTitle       = "Alex Benishek's Programming Blog"
     , feedDescription = "Explainations of various programming topics"
     , feedAuthorName  = "Alex Benishek"
     , feedAuthorEmail = "alex@alexbenishek.com"
