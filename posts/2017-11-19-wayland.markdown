@@ -3,6 +3,31 @@ title: Getting Started with Wayland
 description: Example code for how code a client for Wayland, the replacement for X11.
 ---
 
+ADD
+
+The wayland protocol consists of two parts, a library for IPC and
+   formatting messages between the client and server, and a series of
+   specifications for what messages the server understands and what
+   those messages mean. 
+
+   Messages sent from the server from the client are called "events"
+   while messages from the client to the server are called requests.
+
+   The Wayland API is object oriented in the sense that a message is
+   not just sent from the server then to the client, but is addressed
+   to some object on the server or to some object on the client's
+   side. 
+
+   For a given object, it can only respond to some finite number of
+   "events". On the client side, the wayland library will check for
+   messages for the user when "display_dispatch" is called. For some
+   message, it will check what the message is and what object it is
+   addressed to. So if the server to the client that "the mouse moved
+   to this position" the server is sending a "move" event to the
+   "pointer" object. Before looking up the message, the code in the
+   client program should have registered a callback with that object
+   which runs when the object is given a message. 
+
 In this post I will give an overview of how Wayland on Linux works and then provide source code in a "literate" style where a large block of text preceds a small code segment. This post will only provide a summary of the full code that is on my [github](https://github.com/4X3L/example-wayland). Mainly I will be omitting repetitive code and error checking.
 
 Before I start, I want to cite the resources I used in writing this post.
